@@ -9,4 +9,13 @@ let greetings: string = "hello world";
 
 console.log(greetings);
 
-export {};
+export { };
+
+
+//variable type define.
+let val1: string = "This is string.";
+// val1 = val1.toUpperCase();
+console.log(val1.toUpperCase());
+
+var gae: boolean = true;
+console.log(gae.valueOf());

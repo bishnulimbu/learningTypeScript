@@ -5,32 +5,31 @@ function App() {
   const [uName, setName] = useState("");
   const names = ["ram", "sam", "hari", "sita"];
   const [res, setRes] = useState("");
-  function searchFn(uName) {
+  function searchFn(e) {
+    e.preventDefault();
     // names.includes(uName) ? alert("User Found") : alert("User Not Found")
-    if (names.includes(uName, names)) {
+    if (names.includes(uName)) {
       // return `${uName} found.`
-      setRes(uName);
+      setRes(`${uName} found.`);
     } else {
       setRes(`${uName} not found`)
     }
 
   }
-
-
-
   return (
     <>
       <ul className="list">
         {names.map((data, index) => <li key={index}>{data}</li>)}
       </ul>
       <h1>Hello! User.</h1>
-      <input type="text" name="" value={uName} onChange={(e) => setName(e.target.value)} />
-      <button type=""
-        onClick={() => searchFn(uName)}
+      <form
+        onSubmit={(e) => searchFn(e)}
       >
-        Search Here.
-      </button>
-      <h1>{res}</h1>
+        <input type="text" name="" value={uName} onChange={(e) => setName(e.target.value)} />
+        <button type="submit">Search Here.</button>
+        <h1>{res}</h1>
+
+      </form>
     </>
   )
 }

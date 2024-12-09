@@ -4,8 +4,15 @@ import './App.css'
 function App() {
   const [uName, setName] = useState("");
   const names = ["ram", "sam", "hari", "sita"];
+  const [res, setRes] = useState("");
   function searchFn(uName) {
-    names.includes(uName) ? alert("User Found") : alert("User Not Found")
+    // names.includes(uName) ? alert("User Found") : alert("User Not Found")
+    if (names.includes(uName, names)) {
+      // return `${uName} found.`
+      setRes(uName);
+    } else {
+      setRes(`${uName} not found`)
+    }
 
   }
 
@@ -19,10 +26,11 @@ function App() {
       <h1>Hello! User.</h1>
       <input type="text" name="" value={uName} onChange={(e) => setName(e.target.value)} />
       <button type=""
-      // onClick={searchFn(uName)}
+        onClick={() => searchFn(uName)}
       >
         Search Here.
       </button>
+      <h1>{res}</h1>
     </>
   )
 }

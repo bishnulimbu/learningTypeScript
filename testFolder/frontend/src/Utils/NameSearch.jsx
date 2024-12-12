@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+//already imported onces.
 
 const NameSearch = () => {
   const [uName, setName] = useState("");
   const [vision, setVision] = useState(false);
-  const [names, setArrNames] = useState(["ram", "sam", "hari", "sita"]);
+  const [names, setArrNames] = useState([]);
+  //initilizing the state as an empty array for the inclues method.
   const [res, setRes] = useState("");
   const [newName, setNewName] = useState("");
   const [info, setInfo] = useState("Add New User.");
@@ -18,6 +21,22 @@ const NameSearch = () => {
       setRes(`${uName} not found`)
     }
   }
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const nameData = await axios.get("http://localhost:8080/nameSearch");
+        const result = nameData.data;
+        //doesn't need json() as axios.get returns the response object.
+        setArrNames(result);
+      } catch (error) {
+        console.log("error fetching data.", error);
+      }
+    }
+    fetchData();
+
+  }, [])
+  //run the render on mount and only once.
 
   function toggleText() {
     setVision(!vision);
@@ -48,7 +67,7 @@ const NameSearch = () => {
     <>
 
       <ul className="list">
-        {names.map((data, index) => <li key={index}>{data}</li>)}
+        {names.map((data, index) => <li key={index}>{data.names}</li>)}
       </ul>
       <h1>Hello! User.</h1>
       <form

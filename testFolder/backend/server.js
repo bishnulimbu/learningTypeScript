@@ -58,6 +58,34 @@ async function checkDb() {
 
 })();
 
-app.get('/nameSearch', (req, res) => {
-    res.send("hello");
+app.get('/nameSearch', async (req, res) => {
+    // res.send("hello");
+    try {
+        let userData = await fetchNames();
+        return res.json(userData);
+    } catch (error) {
+        return res.status(500).json({ error: error.message })
+    }
 });
+
+async function fetchNames() {
+    try {
+        const [rows] = await pool.query("select * from userNames");
+        return rows;
+    } catch (error) {
+        console.error("query unsuccessful", error)
+    }
+}
+
+app.post('/nameSearch', async (req, res) => {
+
+})
+
+// async function addNames(jkjk) {
+//     const data1 = res.body();
+//     try {
+//
+//         query = "insert into userNames values"
+//
+//     }
+// }

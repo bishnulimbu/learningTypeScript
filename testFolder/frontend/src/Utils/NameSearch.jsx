@@ -1,11 +1,13 @@
 import { useState } from 'react';
 
-const nameSearch = () => {
+const NameSearch = () => {
   const [uName, setName] = useState("");
   const [vision, setVision] = useState(false);
   const [names, setArrNames] = useState(["ram", "sam", "hari", "sita"]);
   const [res, setRes] = useState("");
   const [newName, setNewName] = useState("");
+  const [info, setInfo] = useState("Add New User.");
+  const [feedB, setFeedB] = useState("");
   function searchFn(e) {
     e.preventDefault();
     // names.includes(uName) ? alert("User Found") : alert("User Not Found")
@@ -19,10 +21,27 @@ const nameSearch = () => {
 
   function toggleText() {
     setVision(!vision);
+    setInfo(vision ? "Add New User." : "Hide");
   }
   function newAdd(e) {
     e.preventDefault();
-    setArrNames([...names, newName]);
+    if (names.includes(newName)) {
+      setFeedB("User Already Exists")
+    }
+    else if
+      (newName.trim() === "") {
+      setFeedB("empty box")
+    } else {
+      setArrNames((names) => [...names, newName.trim()]);
+      setVision(false);
+      setInfo("Add New User.");
+      setNewName("");
+      // alert(`${newName} added.`);
+      setFeedB(`${newName} added.`)
+      setTimeout(() => {
+        setFeedB("");
+      }, 300);
+    }
   }
 
   return (
@@ -39,7 +58,7 @@ const nameSearch = () => {
         <button type="submit">Search Here.</button>
         <h1>{res}</h1>
       </form>
-      <button onClick={toggleText}>Add new User.</button>
+      <button onClick={toggleText}>{info}</button>
       <form onSubmit={(e) => newAdd(e)}>
         {vision && (
           <>
@@ -49,9 +68,12 @@ const nameSearch = () => {
         )}
 
       </form>
+      <div>
+        {feedB && <p>{feedB}</p>}
+      </div>
     </>
   )
 
 }
 
-export default nameSearch;
+export default NameSearch;

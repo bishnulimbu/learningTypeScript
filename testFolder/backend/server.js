@@ -1,10 +1,14 @@
 const mysql = require('mysql2/promise')
 require('dotenv').config();
+const cors = require('cors');
 
 const express = require('express');
 const app = express();
 
+
 const port = process.env.PORT;
+
+app.use(cors());
 
 app.listen(port, () => {
     console.log(`server started at http://localhost:${port}`)
@@ -53,3 +57,7 @@ async function checkDb() {
     }
 
 })();
+
+app.get('/nameSearch', (req, res) => {
+    res.send("hello");
+});

@@ -11,6 +11,7 @@ const NameSearch = () => {
   const [newName, setNewName] = useState("");
   const [info, setInfo] = useState("Add New User.");
   const [feedB, setFeedB] = useState("");
+  const [error, setError] = useState(null);
   function searchFn(e) {
     e.preventDefault();
     // names.includes(uName) ? alert("User Found") : alert("User Not Found")
@@ -31,8 +32,13 @@ const NameSearch = () => {
         setArrNames(result);
       } catch (error) {
         console.log("error fetching data.", error);
+        setError(true);
+        // setArrNames("backend server not running.");
       }
     }
+    // if (!fetchData()) {
+    //   setArrNames("backend server not running.");
+    // }
     fetchData();
 
   }, [])
@@ -67,7 +73,7 @@ const NameSearch = () => {
     <>
 
       <ul className="list">
-        {names.map((data, index) => <li key={index}>{data.names}</li>)}
+        {error ? <h3>Server not running.</h3> : names.map((data, index) => <li key={index}>{data.names}</li>)}
       </ul>
       <h1>Hello! User.</h1>
       <form

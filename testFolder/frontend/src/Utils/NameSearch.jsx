@@ -63,6 +63,7 @@ const NameSearch = () => {
     try {
       await axios.post("http://localhost:8080/nameSearch", { name: newName });
       // will send the name property parameter so is a must.
+      setArrNames([...names, { name: newName }]);
       const nameData = await axios.get("http://localhost:8080/nameSearch");
       setFeedB(`${newName} added.`)
     } catch (error) {
@@ -92,13 +93,27 @@ const NameSearch = () => {
     // }
   }
 
+  async function deleteFn(pName) {
+
+    try {
+      await axios.delete('http://localhost:8080/nameSearch', { data: { name: pName } })
+      // setArrNames(names.some((item) => ));
+      // setArrNames(names.filter((item) => item.name != pName));
+      setFeedB("deleted successfully.")
+
+    } catch (e) {
+      setFeedB("deletion failed.");
+      return console.error("coudn't delete", e);
+
+    }
+  }
   return (
     <>
 
       <ul className="list">
         {error ? <span><h3>Server not running.
           <p>run backend server to fetch name data.</p>
-        </h3></span> : names.map((data, index) => <li key={index}>{data.names}</li>)}
+        </h3></span> : names.map((data, index) => <li key={index} style={{ cursor: 'pointer' }} onClick={() => deleteFn(data.names)}>{data.names}</li>)}
       </ul>
       <h1>Hello! User.</h1>
       <form

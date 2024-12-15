@@ -1,14 +1,12 @@
 const mysql = require('mysql2/promise')
 require('dotenv').config();
 const cors = require('cors');
-
 const express = require('express');
 const app = express();
-
-
 const port = process.env.PORT;
-
 app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.listen(port, () => {
     console.log(`server started at http://localhost:${port}`)
@@ -78,6 +76,27 @@ async function fetchNames() {
 }
 
 app.post('/nameSearch', async (req, res) => {
+    const { name } = req.body;
+    if (!name || name.trim().length === 0) {
+        res.status(400).json({ error: "name required." })
+    }
+    const query = "insert into userNames (names) values (?)";
+    // const values = [name];
+    try {
+        const [result] = await pool.execute(query, [name]);
+        if (result.affectedRows > 0) {
+            return res.status(200).json({ success: true, message: "name added successfully." });
+        } else {
+            return res.status(400).json({ success: false, message: "insertion failed." })
+        }
+        //added success message.
+    } catch (e) {
+        if (e.code === 'ERR_DUP_ENTRY') {
+            return res.status(409).json({ message: "duplicate entry" })
+        }
+        console.error(e);
+        return res.status(500).json({ error: "database error" });
+    }
 
 })
 

@@ -100,6 +100,22 @@ app.post('/nameSearch', async (req, res) => {
 
 })
 
+app.delete('/nameSearch', async (req, res) => {
+    const { name } = req.body;
+    const query = "delete from userNames where names=?";
+    try {
+        const [result] = await pool.execute(query, [name]);
+        if (result.affectedRows > 0) {
+            return res.status(200).json({ success: true, message: "name deleted successfully." });
+        } else {
+            return res.status(400).json({ success: false, message: "deletion failed." })
+        }
+    } catch (error) {
+        console.error("type of error?", error);
+        return res.status(500).json({ error: "error" })
+    }
+})
+
 // async function addNames(jkjk) {
 //     const data1 = res.body();
 //     try {

@@ -12,10 +12,11 @@ const NameSearch = () => {
   const [info, setInfo] = useState("Add New User.");
   const [feedB, setFeedB] = useState("");
   const [error, setError] = useState(null);
+
   function searchFn(e) {
     e.preventDefault();
     // names.includes(uName) ? alert("User Found") : alert("User Not Found")
-    if (names.includes(uName)) {
+    if (names.some((demoName) => demoName.names === uName)) {
       // return `${uName} found.`
       setRes(`${uName} found.`);
     } else {
@@ -48,32 +49,56 @@ const NameSearch = () => {
     setVision(!vision);
     setInfo(vision ? "Add New User." : "Hide");
   }
-  function newAdd(e) {
+
+  async function newAdd(e) {
     e.preventDefault();
-    if (names.includes(newName)) {
+
+    if (!newName.trim()) {
+      setFeedB("empty box");
+    } else if (names.some((demoName) => demoName.names === newName.trim())) {
       setFeedB("User Already Exists")
+      return;
     }
-    else if
-      (newName.trim() === "") {
-      setFeedB("empty box")
-    } else {
-      setArrNames((names) => [...names, newName.trim()]);
-      setVision(false);
-      setInfo("Add New User.");
-      setNewName("");
-      // alert(`${newName} added.`);
+
+    try {
+      await axios.post("http://localhost:8080/nameSearch", { name: newName });
+      // will send the name property parameter so is a must.
+      const nameData = await axios.get("http://localhost:8080/nameSearch");
       setFeedB(`${newName} added.`)
-      setTimeout(() => {
-        setFeedB("");
-      }, 300);
+    } catch (error) {
+      if (error.response.status === 409) {
+        setFeedB("duplicate entry");
+      } else {
+        setFeedB("something went wrong");
+        console.log("name could not be added", error);
+      }
     }
+    // if (names.includes(newName)) {
+    //   setFeedB("User Already Exists")
+    // }
+    // else if
+    //   (newName.trim() === "") {
+    //   setFeedB("empty box")
+    // } else {
+    //   setArrNames((names) => [...names, newName.trim()]);
+    //   setVision(false);
+    //   setInfo("Add New User.");
+    //   setNewName("");
+    //   // alert(`${newName} added.`);
+    //   setFeedB(`${newName} added.`)
+    //   setTimeout(() => {
+    //     setFeedB("");
+    //   }, 300);
+    // }
   }
 
   return (
     <>
 
       <ul className="list">
-        {error ? <h3>Server not running.</h3> : names.map((data, index) => <li key={index}>{data.names}</li>)}
+        {error ? <span><h3>Server not running.
+          <p>run backend server to fetch name data.</p>
+        </h3></span> : names.map((data, index) => <li key={index}>{data.names}</li>)}
       </ul>
       <h1>Hello! User.</h1>
       <form

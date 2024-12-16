@@ -1,8 +1,10 @@
 var a = 1;
 function fnOne(a) {
-    return function () {
-        return a + 10;
+    return (b) => {
+        return (c) => {
+            return a + b + c;
+        }
     }
     // return a;
 }
-console.log(fnOne(a)());
+console.log(fnOne(1)(2)(3));
